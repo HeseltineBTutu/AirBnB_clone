@@ -24,21 +24,40 @@ class BaseModel:
     creation and update timestamps, and string representation.
     """
 
-    def __init__(self, created_at=None, updated_at=None):
+    def __init__(self, *args, **kwargs):
         """
         Initializes a BaseModel instance.
-
-        :param created_at: Optional datetime object specifying the
-                           creation timestamp. If not provided,
-                           defaults to the current datetime.
-        :param updated_at: Optional datetime object specifying the
-                           last update timestamp. If not provided,
-                           defaults to the current datetime.
-
-         """
+        """
+        # Always create the id attribute
         self.id = str(uuid.uuid4())
-        self.created_at = created_at if created_at else datetime.now()
-        self.updated_at = updated_at if updated_at else datetime.now()
+
+        if kwargs:  # Check if kwargs is not empty
+            # Iterate through key-value pairs in kwargs
+            for key, value in kwargs.items():
+                # Skip __class__ attribute
+                if key == "__class__":
+                    continue
+                # Convert created_at and updated_at strings to datetime objects
+                if key in ["created_at", "updated_at"]:
+                    if value is not None:
+                        if isinstance(value, str):
+                            value = datetime.strptime(
+                                    value,
+                                    "%Y-%m-%dT%H:%M:%S.%f"
+                                    )
+                setattr(self, key, value)  # Set attribute
+        else:
+            # If kwargs is empty, create
+            # new instance with created_atand updated_at
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+
+            # Set created_at and updated_at to
+            # current datetime if None is provided
+            if "created_at" not in kwargs:
+                self.created_at = datetime.now()
+            if "updated_at" not in kwargs:
+                self.updated_at = datetime.now()
 
     def __str__(self):
         """
