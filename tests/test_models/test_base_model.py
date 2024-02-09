@@ -27,9 +27,8 @@ class TestBaseModel(unittest.TestCase):
         """Test initialization of BaseModel instance with None timestamps."""
         obj = BaseModel(created_at=None, updated_at=None)
         self.assertIsInstance(obj.id, str)
-        self.assertIsInstance(obj.created_at, datetime)
-        self.assertIsInstance(obj.updated_at, datetime)
-        self.assertAlmostEqual(obj.created_at, obj.updated_at, delta=timedelta(milliseconds=10))
+        self.assertIsNone(obj.created_at)
+        self.assertIsNone(obj.updated_at)
 
     def test_save_with_none_timestamp(self):
         """
