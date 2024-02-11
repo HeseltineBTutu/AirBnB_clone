@@ -1,9 +1,11 @@
+"""This module is unit tests for FileStorage class"""
 import unittest
 import json
 import os
 from unittest.mock import patch, MagicMock
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
+
 
 class TestFileStorage(unittest.TestCase):
     def setUp(self):
@@ -34,7 +36,9 @@ class TestFileStorage(unittest.TestCase):
     @patch("os.path.exists", return_value=True)
     def test_reload_with_existing_file(self, mock_exists, mock_open):
         mock_file = MagicMock()
-        mock_file.read.return_value = '{"BaseModel.1": {"id": 1, "name": "Alice"}}'
+        mock_file.read.return_value = ('{"BaseModel.1": '
+
+                                       '{"id": 1, "name": "Alice"}}')
         mock_open.return_value.__enter__.return_value = mock_file
 
         self.storage.reload()
@@ -63,6 +67,7 @@ class TestFileStorage(unittest.TestCase):
 
     def test_all_returns_empty_dict_if_no_object(self):
         self.assertEqual({}, self.storage.all())
+
 
 if __name__ == "__main__":
     unittest.main()
