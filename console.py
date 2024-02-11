@@ -10,6 +10,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_EOF(self, arg):
         """Handle end-of-file"""
+        print()
         return True
 
     def do_quit(self, arg):
@@ -18,12 +19,6 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         pass
-
-    def default(self, line):
-        if not line:
-            return self.emptyline()
-        else:
-            print(f"Command '{line}' not recognized")
 
 
 if __name__ == '__main__':
