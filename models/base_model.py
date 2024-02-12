@@ -32,6 +32,12 @@ class BaseModel:
         # Always create the id attribute
         self.id = str(uuid.uuid4())
 
+        # Set created_at and updated_at to current datetime if None is provided
+        if "created_at" not in kwargs:
+            self.created_at = datetime.now()
+        if "updated_at" not in kwargs:
+            self.updated_at = datetime.now()
+
         if kwargs:  # Check if kwargs is not empty
             # Iterate through key-value pairs in kwargs
             for key, value in kwargs.items():
@@ -47,18 +53,6 @@ class BaseModel:
                                     "%Y-%m-%dT%H:%M:%S.%f"
                                     )
                 setattr(self, key, value)  # Set attribute
-        else:
-            # If kwargs is empty, create
-            # new instance with created_atand updated_at
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-
-            # Set created_at and updated_at to
-            # current datetime if None is provided
-            if "created_at" not in kwargs:
-                self.created_at = datetime.now()
-            if "updated_at" not in kwargs:
-                self.updated_at = datetime.now()
 
     def __str__(self):
         """
@@ -75,6 +69,7 @@ class BaseModel:
         """
         Saves the instance to the storage
         """
+        self.updated_at = datetime.utcnow()
         storage.new(self)
         storage.save()
 
