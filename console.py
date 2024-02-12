@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 This module provides a command-line interface
 for interacting with an AirBnB clone.
@@ -19,6 +20,12 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         pass
+
+    def do_helpi(self, arg):
+        """Get help on commands"""
+        if arg:
+            super().do_help(arg)
+
 
 
 if __name__ == '__main__':
