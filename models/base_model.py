@@ -15,7 +15,7 @@ Usage:
 
 from datetime import datetime
 import uuid
-from models import storage
+import models
 
 
 class BaseModel:
