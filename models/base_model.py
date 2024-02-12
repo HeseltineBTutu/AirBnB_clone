@@ -70,8 +70,8 @@ class BaseModel:
         Saves the instance to the storage
         """
         self.updated_at = datetime.utcnow()
-        storage.new(self)
-        storage.save()
+        models.storage.new(self)
+        models.storage.save()
 
     def to_dict(self):
         """
