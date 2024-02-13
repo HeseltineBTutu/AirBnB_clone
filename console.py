@@ -59,7 +59,7 @@ class HBNBCommand(cmd.Cmd):
 
         # Map class names to their corresponding Python class
         class_mapping = {
-                'BaselModel': BaseModel
+                'BaseModel': BaseModel
                 }
 
         class_name = arg.split()[0]
