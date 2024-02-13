@@ -37,6 +37,10 @@ class HBNBCommand(cmd.Cmd):
             print("Deletes an instance based on the class name and id")
             print("Usage: destroy <class name> <id>")
             print("Example: destroy BaseModel 1234-1234-1234")
+        elif arg == "all":
+            print("Prints all string representation of all instances")
+            print("Usage: all BaseModel or all")
+            print("Example: all BaseModel or all")
         else:
             super().do_help(arg)
 
