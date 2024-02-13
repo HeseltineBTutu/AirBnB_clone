@@ -33,6 +33,10 @@ class HBNBCommand(cmd.Cmd):
             print("Creates a new instance of BaseModel, saves it (to the JSON file) and prints the id")
             print("Usage: create <class name>")
             print("Example: create BaseModel")
+        elif arg == "destroy":
+            print("Deletes an instance based on the class name and id")
+            print("Usage: destroy <class name> <id>")
+            print("Example: destroy BaseModel 1234-1234-1234")
         else:
             super().do_help(arg)
 
@@ -79,6 +83,32 @@ class HBNBCommand(cmd.Cmd):
             return
 
         print(storage.all()[key])
+
+    def do_destroy(self, arg):
+        """Deletes an instance based on the class name and id"""
+        args = arg.split()
+        if not args:
+            print("** class name missing **")
+            return
+
+        class_name = args[0]
+        if class_name not in [key.split('.')[0] for key in storage.all()]:
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        instance_id = args[1]
+        key = class_name + '.' + instance_id
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+
+        del storage.all()[key]
+        storage.save()
+
 
 
 if __name__ == '__main__':
