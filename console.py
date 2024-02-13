@@ -6,7 +6,7 @@ for interacting with an AirBnB clone.
 import cmd
 from models.base_model import BaseModel
 import json
-
+from models import storage
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
@@ -25,7 +25,15 @@ class HBNBCommand(cmd.Cmd):
 
     def do_help(self, arg):
         """Get help on commands"""
-        if arg:
+        if arg == "show":
+            print("Prints the string representation of an instance")
+            print("Usage: show <class name> <id>")
+            print("Example: show BaseModel 1234-1234-1234")
+        elif arg == "create":
+            print("Creates a new instance of BaseModel, saves it (to the JSON file) and prints the id")
+            print("Usage: create <class name>")
+            print("Example: create BaseModel")
+        else:
             super().do_help(arg)
 
     def do_create(self, arg):
@@ -47,6 +55,30 @@ class HBNBCommand(cmd.Cmd):
         new_instance = class_mapping[class_name]()
         new_instance.save()
         print(new_instance.id)
+
+    def do_show(self, arg):
+        """Prints the string representation of an instance"""
+        args = arg.split()
+        if not args:
+            print("** class name missing **")
+            return
+
+        class_name = args[0]
+        if class_name not in [key.split('.')[0] for key in storage.all()]:
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        instance_id = args[1]
+        key = class_name + '.' + instance_id
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+
+        print(storage.all()[key])
 
 
 if __name__ == '__main__':
