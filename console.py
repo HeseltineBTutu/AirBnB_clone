@@ -10,6 +10,9 @@ from models import storage
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
+    __classes = {
+            "BaseModel"
+            }
 
     def do_EOF(self, arg):
         """Handle end-of-file"""
@@ -59,7 +62,7 @@ class HBNBCommand(cmd.Cmd):
 
         # Map class names to their corresponding Python class
         class_mapping = {
-                'BaselModel': BaseModel
+                "BaseModel": BaseModel
                 }
 
         class_name = arg.split()[0]
@@ -73,27 +76,32 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         """Prints the string representation of an instance"""
-        args = arg.split()
-        if not args:
+        try:
+            args = arg.split()
+            if not args:
+                raise SyntaxError()
+
+            class_name = args[0]
+            if class_name not in self.__classes:
+                raise NameError()
+
+            if len(args) < 2:
+                raise IndexError()
+
+            instance_id = args[1]
+            key = class_name + '.' + instance_id
+            if key not in storage.all():
+                print(storage.all()[key])
+            else:
+                raise KeyError()
+        except SyntaxError:
             print("** class name missing **")
-            return
-
-        class_name = args[0]
-        if class_name not in [key.split('.')[0] for key in storage.all()]:
+        except NameError:
             print("** class doesn't exist **")
-            return
-
-        if len(args) < 2:
+        except IndexError:
             print("** instance id missing **")
-            return
-
-        instance_id = args[1]
-        key = class_name + '.' + instance_id
-        if key not in storage.all():
+        except KeyError:
             print("** no instance found **")
-            return
-
-        print(storage.all()[key])
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id"""
