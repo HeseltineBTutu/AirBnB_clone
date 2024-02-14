@@ -133,6 +133,7 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             # If no class name provided, print all instances
             instances = storage.all().values()
+            print(instances)
         else:
             class_name = arg
             if class_name not in [key.split('.')[0] for key in storage.all()]:
