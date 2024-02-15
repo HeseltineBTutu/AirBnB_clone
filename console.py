@@ -90,7 +90,7 @@ class HBNBCommand(cmd.Cmd):
 
             instance_id = args[1]
             key = class_name + '.' + instance_id
-            if key not in storage.all():
+            if key in storage.all():
                 print(storage.all()[key])
             else:
                 raise KeyError()
