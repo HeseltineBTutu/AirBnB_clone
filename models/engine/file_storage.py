@@ -42,13 +42,20 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}  # Dictionary to store objects
 
-    def all(self):
+    def all(self, cls=None):
         """
         Returns the dictionary __objects.
         """
-        if not FileStorage.__objects:
-            return {}
-        return FileStorage.__objects
+        if cls is not None:
+            if type(cls) == str:
+                cls_dict = eval(cls)
+            cls_dict = {}
+            for k, v in self.__objects.items():
+                if type(v) == cls:
+                    cls_dict[k] = v
+            return cls_dict
+        return self.__objects
+
 
     def new(self, obj):
         """
@@ -73,17 +80,30 @@ class FileStorage:
         Deserializes the JSON file to __objects (only if the JSON file
         (__file_path) exists; otherwise, do nothing).
         """
-        if os.path.exists(FileStorage.__file_path):
+        if os.path.exists(FileStorage.__file_path) and os.path.getsize(self.__class__.__file_path) > 0:
             with open(FileStorage.__file_path, "r") as f:
-                data = json.load(f)
+                try:
+                    data = json.load(f)
+                except json.JSONDecodeError as e:
+                    print(f"Error decoding JSON file: {e}")
+                    return
+
+                module_name = "models.base_model"
+                module = importlib.import_module(module_name)
+
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
-                    module_name = f"models.base_model"
-                    module = importlib.import_module(module_name)
                     cls = getattr(module, class_name)
 
                     # Add new objects from the JSON file
                     # if they do not already exist
-                    if key not in FileStorage.__objects:
+                    if key in FileStorage.__objects:
+                        # Update existing object with data from JSON
+                        obj_instance = FileStorage.__objects[key]
+                        obj_instance.__dict__.update(value)
+                    else:
                         obj_instance = cls(**value)
                         FileStorage.__objects[key] = obj_instance
+        else:
+            # If the file is empty or doesn't exist, clear the storage
+            FileStorage.__objects.clear()
