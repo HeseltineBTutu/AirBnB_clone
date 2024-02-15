@@ -130,78 +130,68 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """Prints all string representation of all instances"""
-        if not arg:
-            # If no class name provided, print all instances
-            instances = storage.all().values()
-            print(instances)
-        else:
-            class_name = arg
-            if class_name not in [key.split('.')[0] for key in storage.all()]:
-                print("** class doesn't exist **")
+        try:
+            if not arg:
+                # If no class name provided, print all instances
+                instances = storage.all()
+                print([instances[k].__str__() for k in instances])
                 return
-            # Filter instances by class name
-            instances = [instance for instance in storage.all().values()
-                    if instance.__class__.__name__ == class_name]
+            else:
+                args = arg.split()
+                class_name = args[0]
+                if class_name not in self.__classes:
+                    raise NameError("** class doesn't exist **")
 
-            # Print string representation of all instances
-            print([str(instance) for instance in instances])
+
+                instances = storage.all(eval(class_name))
+                print([instances[k].__str__() for k in instances])
+        except NameError as e:
+            print(e)
 
     def do_update(self, arg):
          """Updates an instance based on the class name and id"""
-         args = arg.split()
-         if not args:
-             print("** class name missing **")
-             return
+         try:
+             args = arg.split()
+             if not args:
+                 raise SyntaxError()
 
-         class_name = args[0]
-         if class_name not in [key.split('.')[0] for key in storage.all()]:
-             print("** class doesn't exist **")
-             return
+             class_name = args[0]
+             if class_name not in self.__classes:
+                 raise NameError()
 
-         if len(args) < 2:
-             print("** instance id missing **")
-             return
+             if len(args) < 2:
+                 raise IndexError()
+             objects = storage.all()
 
-         instance_id = args[1]
-         key = class_name + '.' + instance_id
-         if key not in storage.all():
-             print("** no instance found **")
-             return
+             instance_id = args[1]
+             key = class_name + '.' + instance_id
 
-         if len(args) < 3:
-             print("** attribute name missing **")
-             return
+             if key not in objects:
+                 raise KeyError()
 
-         attribute_name = args[2]
-         if len(args) < 4:
-             print("** value missing **")
-             return
+             if len(args) < 3:
+                 raise AttributeError()
+             if len(args) < 4:
+                 raise ValueError()
 
-         attribute_value_str = args[3]
-
-         # Get the instance from storage
-         instance = storage.all()[key]
-
-         # Only simple attributes can be updated: string, integer, and float
-         if hasattr(instance, attribute_name):
-             # Get the attribute type
-             attribute_type = type(getattr(instance, attribute_name))
-
-             # Cast attribute value to the attribute type
+             attribute_name = objects[key]
              try:
-                 attribute_value = attribute_type(attribute_value_str)
-             except ValueError:
-                 print("** value missing **")
-                 return
-
-             # Update the attribute
-             setattr(instance, attribute_name, attribute_value)
-
-             # Save the change into the JSON file
-             storage.save()
-         else:
-             print("** attribute name doesn't exist **")
-
+                 attribute_name.__dict__[args[2]] = eval(args[3])
+             except Exception:
+                 attribute_name.__dict__[args[2]] = args[3]
+                 attribute_name.save()
+         except SyntaxError:
+             print("** class name missing **")
+         except NameError:
+             print("** class doesn't exist **")
+         except IndexError:
+             print("** instance id missing **")
+         except KeyError:
+             print("** no instance found **")
+         except AttributeError:
+             print("** attribute name missing **")
+         except ValueError:
+             print("** value missing **")
 
 
 if __name__ == '__main__':
