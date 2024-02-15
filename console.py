@@ -5,13 +5,15 @@ for interacting with an AirBnB clone.
 """
 import cmd
 from models.base_model import BaseModel
+from models.user import User
 import json
 from models import storage
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
     __classes = {
-            "BaseModel"
+            "BaseModel": BaseModel,
+            "User": User
             }
 
     def do_EOF(self, arg):
@@ -60,17 +62,12 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        # Map class names to their corresponding Python class
-        class_mapping = {
-                "BaseModel": BaseModel
-                }
-
         class_name = arg.split()[0]
-        if class_name not in class_mapping:
+        if class_name not in self.__classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = class_mapping[class_name]()
+        new_instance = self.__classes[class_name]()
         new_instance.save()
         print(new_instance.id)
 
