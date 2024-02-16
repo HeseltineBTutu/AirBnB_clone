@@ -6,6 +6,12 @@ for interacting with an AirBnB clone.
 import cmd
 import json
 from models import storage
+from models.state import State
+from models.city import City
+from models.review import Review
+from models.amenity import Amenity
+from models.place import Place
+from models.user import User
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
@@ -57,6 +63,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
+        # Map class names to their corresponding Python class
+
         class_name = arg.split()[0]
         if class_name not in self.class_map:
             print("** class doesn't exist **")
@@ -82,7 +90,7 @@ class HBNBCommand(cmd.Cmd):
 
             instance_id = args[1]
             key = class_name + '.' + instance_id
-            if key in storage.all():
+            if key not in storage.all():
                 print(storage.all()[key])
             else:
                 raise KeyError()
@@ -136,7 +144,10 @@ class HBNBCommand(cmd.Cmd):
 
 
                 instances = storage.all(eval(class_name))
-                print([instances[k].__str__() for k in instances])
+                if not instances:
+                    print("No instances found for class:", class_name)
+                else:
+                    print([instances[k].__str__() for k in instances])
         except NameError as e:
             print(e)
 
