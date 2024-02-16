@@ -4,17 +4,12 @@ This module provides a command-line interface
 for interacting with an AirBnB clone.
 """
 import cmd
-from models.base_model import BaseModel
-from models.user import User
 import json
 from models import storage
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
-    __classes = {
-            "BaseModel": BaseModel,
-            "User": User
-            }
+    class_map = storage.class_map
 
     def do_EOF(self, arg):
         """Handle end-of-file"""
@@ -63,11 +58,11 @@ class HBNBCommand(cmd.Cmd):
             return
 
         class_name = arg.split()[0]
-        if class_name not in self.__classes:
+        if class_name not in self.class_map:
             print("** class doesn't exist **")
             return
 
-        new_instance = self.__classes[class_name]()
+        new_instance = self.class_map[class_name]()
         new_instance.save()
         print(new_instance.id)
 
@@ -79,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError()
 
             class_name = args[0]
-            if class_name not in self.__classes:
+            if class_name not in self.class_map:
                 raise NameError()
 
             if len(args) < 2:
@@ -136,7 +131,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 args = arg.split()
                 class_name = args[0]
-                if class_name not in self.__classes:
+                if class_name not in self.class_map:
                     raise NameError("** class doesn't exist **")
 
 
@@ -153,7 +148,7 @@ class HBNBCommand(cmd.Cmd):
                  raise SyntaxError()
 
              class_name = args[0]
-             if class_name not in self.__classes:
+             if class_name not in self.class_map:
                  raise NameError()
 
              if len(args) < 2:
