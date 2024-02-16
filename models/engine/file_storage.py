@@ -1,7 +1,3 @@
-import json
-import os
-import importlib
-from models.user import User
 """
 FileStorage module provides the FileStorage class, which serializes instances
 to a JSON file and deserializes JSON file to instances.
@@ -32,6 +28,16 @@ Usage:
     # Access stored objects
     objects = storage.all()
 """
+import json
+import os
+import importlib
+from models.user import User
+from models.amenity import Amenity
+from models.review import Review
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.base_model import BaseModel
 
 
 class FileStorage:
@@ -42,6 +48,16 @@ class FileStorage:
 
     __file_path = "file.json"
     __objects = {}  # Dictionary to store objects
+    class_map = {
+            "User": User,
+            "Place": Place,
+            "State": State,
+            "City": City,
+            "Amenity": Amenity,
+            "Review": Review,
+            "BaseModel": BaseModel
+            }
+
 
     def all(self, cls=None):
         """
@@ -106,11 +122,20 @@ class FileStorage:
                 module_name = "models.base_model"
                 module = importlib.import_module(module_name)
 
+                class_map = {
+                        "User": User,
+                        "Place": Place,
+                        "State": State,
+                        "City": City,
+                        "Amenity": Amenity,
+                        "Review": Review,
+                        "BaseModel": BaseModel,
+                        "User": User
+                        }
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
-                    if class_name == "User":
-                        cls = User
-                    else:
+                    cls = class_map.get(class_name)
+                    if cls is None:
                         cls = getattr(module, class_name)
 
                     # Add new objects from the JSON file
