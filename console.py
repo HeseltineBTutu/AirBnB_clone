@@ -99,6 +99,10 @@ class HBNBCommand(cmd.Cmd):
                 raise KeyError("** no instance found **")
 
             print(instance)
+
+        except SyntaxError as e:
+            print(e)
+
         except IndexError as e:
             print(e)
 
