@@ -12,6 +12,7 @@ from models.review import Review
 from models.amenity import Amenity
 from models.place import Place
 from models.user import User
+from models.base_model import BaseModel
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
