@@ -145,7 +145,7 @@ class HBNBCommand(cmd.Cmd):
 
                 instances = storage.all(eval(class_name))
                 if not instances:
-                    print("No instances found for class:", class_name)
+                    print("** no instance found **")
                 else:
                     print([instances[k].__str__() for k in instances])
         except NameError as e:
