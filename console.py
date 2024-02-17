@@ -93,8 +93,9 @@ class HBNBCommand(cmd.Cmd):
 
             # Retrieve the instance from storage
             key = class_name + '.' + instance_id
+            instance = storage.all().get(key)
 
-            if key not in storage.all():
+            if instance is None:
                 raise KeyError("** no instance found **")
 
             print(instance)
