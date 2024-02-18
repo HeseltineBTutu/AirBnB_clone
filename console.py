@@ -147,26 +147,33 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         """Prints all string representation of all instances"""
+        if not arg:
+            instances = storage.all()
+            print([instances[k].__str__() for k in instances])
+            return
         try:
-            if not arg:
-                # If no class name provided, print all instances
-                instances = storage.all()
-                print([instances[k].__str__() for k in instances])
-                return
-            else:
-                args = arg.split()
-                class_name = args[0]
-                if class_name not in self.class_map:
-                    raise NameError("** class doesn't exist **")
+            class_name = arg.split()[0]
+            if class_name not in self.class_map:
+                raise NameError("** class doesn't exist **")
 
-
-                instances = storage.all(eval(class_name))
-                if not instances:
-                    print("** no instance found **")
-                else:
-                    print([instances[k].__str__() for k in instances])
-        except NameError as e:
+            instances = storage.all(self.class_map[class_name])
+            print([instances[k].__str__() for k in instances])
+            
+        except (NameError) as e:
             print(e)
+
+    def default(self, arg):
+        """
+        Executes when the command entered by the user is not recognized by
+        the user is not recognized by the interpreter.
+
+        Args (str): The command entered by the user.
+        """
+        args = arg.split('.')
+        if len(args) >= 2 and args[1] == "all()":
+            self.do_all(args[0])
+        else:
+            super().default(arg)
 
     def do_update(self, arg):
          """Updates an instance based on the class name and id"""
