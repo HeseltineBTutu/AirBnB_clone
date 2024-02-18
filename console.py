@@ -172,8 +172,26 @@ class HBNBCommand(cmd.Cmd):
         args = arg.split('.')
         if len(args) >= 2 and args[1] == "all()":
             self.do_all(args[0])
+        elif args[1] == "count()":
+            self.do_count(args[0])
         else:
             super().default(arg)
+
+    def do_count(self, arg):
+        """Retrieves the number of instances of a class.
+
+        Args:
+            arg (str): The command entered by the user, which should be in the format
+                    '<class name>.count()'.
+        """
+        try:
+            class_name = arg.split()[0]
+            if class_name not in self.class_map:
+                raise NameError("** class doesn't exist **")
+            instances = storage.all(self.class_map[class_name])
+            print(len(instances))
+        except (NameError, SyntaxError) as e:
+            print(e)
 
     def do_update(self, arg):
          """Updates an instance based on the class name and id"""
