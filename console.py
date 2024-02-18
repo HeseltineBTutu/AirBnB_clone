@@ -96,8 +96,8 @@ class HBNBCommand(cmd.Cmd):
             objects = storage.all()
             key = class_name + '.' + instance_id
 
-            if key is objects:
-                print(key)
+            if key in objects:
+                print(objects[key])
             else:
                 raise KeyError()
 
