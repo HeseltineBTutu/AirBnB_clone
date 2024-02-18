@@ -106,9 +106,6 @@ class HBNBCommand(cmd.Cmd):
         except IndexError as e:
             print(e)
 
-        except IndexError as e:
-            print(e)
-
         except NameError as e:
             print(e)
 
