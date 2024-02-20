@@ -180,6 +180,11 @@ class HBNBCommand(cmd.Cmd):
                 self.do_count(args[0])
             elif args[1] == "all()":
                 self.do_all(args[0])
+            elif args[1].startswith("destroy(") and args[1].endswith(")"):
+                # Extract the instance ID from the command
+                instance_id = args[1][8:-1]
+                # Call do_destroy method with class name and instance ID
+                self.do_destroy(args[0] + " " + instance_id)
         else:
             super().default(arg)
 
