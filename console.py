@@ -185,6 +185,14 @@ class HBNBCommand(cmd.Cmd):
                 instance_id = args[1][8:-1]
                 # Call do_destroy method with class name and instance ID
                 self.do_destroy(args[0] + " " + instance_id)
+            elif args[1].startswith("update(") and args[1].endswith(")"):
+                # Extract the instance ID, attribute name, and attribute value from the command
+                params = args[1][7:-1].split(', ')
+                instance_id = params[0]
+                attribute_name = params[1]
+                attribute_value = params[2]
+                # Call do_update method with class name, instance ID, attribute name, and attribute value
+                self.do_update(args[0] + " " + instance_id + " " + attribute_name + " " + attribute_value)
         else:
             super().default(arg)
 
