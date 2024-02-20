@@ -97,7 +97,7 @@ class HBNBCommand(cmd.Cmd):
             key = class_name + '.' + instance_id
 
             if key in objects:
-                print(objects[key])
+                print("Instance found in storage:", objects[key].__str__())
             else:
                 raise KeyError()
 
@@ -170,10 +170,16 @@ class HBNBCommand(cmd.Cmd):
         Args (str): The command entered by the user.
         """
         args = arg.split('.')
-        if len(args) >= 2 and args[1] == "all()":
-            self.do_all(args[0])
-        elif args[1] == "count()":
-            self.do_count(args[0])
+        if len(args) >= 2:
+            if args[1].startswith("show(") and args[1].endswith(")"):
+                # Extract the instance ID from the command
+                instance_id = args[1][5:-1]
+                # Call do_show method with class name and instance ID
+                self.do_show(args[0] + " " + instance_id)
+            elif args[1] == "count()":
+                self.do_count(args[0])
+            elif args[1] == "all()":
+                self.do_all(args[0])
         else:
             super().default(arg)
 
