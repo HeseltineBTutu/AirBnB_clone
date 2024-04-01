@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-This module provides a command-line interface
+This module allocates a command-line interface
 for interacting with an AirBnB clone.
 """
 import cmd
